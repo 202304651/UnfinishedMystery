@@ -1,2 +1,2 @@
 # UnfinishedMystery
-Unfinished Mystery is a 3D mystery puzzle game developed for Windows and Mac.
+Unfinished Mystery is a 3D mystery puzzle game developed for Windows and Mac, targeting players aged 15 and above who enjoy mystery, puzzles, and narrative-driven games. The player wakes up with no memory, trapped in a room that resets every 5 minutes. Across 5 levels they step into the life of a different person, each carrying a dark secret hidden inside their room. Explore, solve puzzles, and escape before the loop resets, or it is game over. 
