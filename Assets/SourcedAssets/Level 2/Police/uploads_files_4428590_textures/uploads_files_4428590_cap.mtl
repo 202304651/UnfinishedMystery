@@ -1,0 +1,44 @@
+# Blender 3.4.1 MTL File: 'cap.blend'
+# www.blender.org
+
+newmtl Material.001
+Ka 1.000000 1.000000 1.000000
+Kd 0.007208 0.049897 0.000279
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns C:/BrownLeather02_4K_Roughness.png
+map_Bump -bm 1.000000 C:/BrownLeather02_4K_Normal.png
+
+newmtl Material.003
+Ns 751.641235
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.004
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns C:/Jeans03_1K_Roughness.png
+map_Bump -bm 1.500000 C:/Jeans03_1K_Normal.png
+
+newmtl Material.005
+Ns 876.776855
+Ka 1.000000 1.000000 1.000000
+Ks 0.381818 0.381818 0.381818
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd C:/gold_0005_c.jpg
