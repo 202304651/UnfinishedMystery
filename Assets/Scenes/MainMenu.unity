@@ -2978,8 +2978,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 42.000004, y: 117.99999}
-  m_SizeDelta: {x: 420, y: 150}
+  m_AnchoredPosition: {x: 27, y: 117.99999}
+  m_SizeDelta: {x: 500, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1886923115
 MonoBehaviour:
@@ -3001,8 +3001,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "W / A / S / D \u2013 Move\nE \u2013 Interact\nTAB \u2013 Memory Notes\nESC
-    \u2013 Pause"
+  m_text: "W / A / S / D or Arrow Keys \u2013 Move\nMouse \u2013 Look Around\nE \u2013
+    Interact / Inspect / Read\nTAB \u2013 Memory Notes\nESC \u2013 Pause Menu\n0
+    \u2013 9 \u2013 Inventory Slots"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 73150c96d7ffb4664bb1b2ce4983202a, type: 2}
   m_sharedMaterial: {fileID: 5376750787272237277, guid: 73150c96d7ffb4664bb1b2ce4983202a, type: 2}
@@ -3195,7 +3196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -13, y: -7}
+  m_AnchoredPosition: {x: -13, y: -7.000122}
   m_SizeDelta: {x: 0.000030517578, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2083816144
