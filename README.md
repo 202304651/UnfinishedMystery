@@ -53,29 +53,38 @@ Unfinished Mystery is a narrative-driven puzzle game where players are trapped i
  
 ### Advanced Feature
  
-**Time Loop Reset System**
+**1. Time Loop Reset System**:
 The game uses a time-loop mechanic where the environment resets every 5 minutes if the player fails to complete the objective. This encourages players to learn from previous attempts and use the knowledge they gained to solve puzzles more efficiently in the next loop.
- 
+
+**2. Loop-Based Hint System**: The game includes a loop-based hint system where hints change depending on the number of loops completed. Early loops provide no hints, mid loops provide subtle guidance, and later loops provide direct clues to help the player progress.
 ### Simple Features
  
-**1. Countdown Timer**
+**1. Countdown Timer**:
 Each level includes a visible 5-minute countdown timer that limits the time available for the player to explore the room and solve puzzles before the loop resets.
  
-**2. Interactive Object System**
+**2. Interactive Object System**:
 Players can interact with objects in the environment such as drawers, books, papers, and devices to discover clues and progress through the level.
  
-**3. Puzzle Solving System**
+**3. Puzzle Solving System**:
 The game includes different puzzles that players must solve in order to unlock objects, reveal clues, and move closer to completing the level objective.
  
-**4. Clue Discovery System**
+**4. Clue Discovery System**:
 Important clues are hidden throughout the environment in notes, documents, and interactive objects. Players must carefully observe their surroundings to uncover the story and solve puzzles.
  
-**5. Exploration Gameplay**
+**5. Exploration System**:
 Players can freely explore the room to search for hidden clues, puzzle elements, and interactive objects that support progression.
  
-**6. Timer Anxiety Effect**
+**6. Timer Anxiety System**:
 In the final moments of each loop, visual and audio effects increase the player's sense of urgency and tension.
  
+**7. Memory Journal System**: 
+Players can access a memory journal to review clues, notes, and discoveries collected from previous loops, helping them connect information and solve puzzles more effectively.
+
+**8. Performance Reward System**:
+After completing a level, the player receives a summary screen showing performance details and a star rating based on the number of loops used. Completing all levels unlocks a completion badge.
+
+**9. Temporary Item System**:
+Players can use certain items within a loop, but these items do not carry over after the environment resets.
 
 ---
 
