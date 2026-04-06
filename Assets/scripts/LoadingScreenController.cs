@@ -2,37 +2,70 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LoadingScreenController : MonoBehaviour
 {
     public Image doorImage;
     public Sprite closedDoorSprite;
     public Sprite openDoorSprite;
+    public TextMeshProUGUI loadingText;
+
     public string nextSceneName = "Level1";
 
-    public float closedDoorTime = 1.5f;
-    public float openDoorTime = 1.0f;
+    public float minimumLoadingTime = 2f;
+    public float openDoorDelay = 1f;
+
+    private AsyncOperation asyncLoad;
 
     void Start()
     {
-        StartCoroutine(LoadingSequence());
+        if (doorImage == null || closedDoorSprite == null || openDoorSprite == null || loadingText == null)
+        {
+            Debug.LogError("LoadingScreenController: Missing references!");
+            return;
+        }
+
+        StartCoroutine(LoadSceneRoutine());
     }
 
-    IEnumerator LoadingSequence()
+    IEnumerator LoadSceneRoutine()
     {
-        // Start with closed door
         doorImage.sprite = closedDoorSprite;
 
-        // Wait while loading screen is shown
-        yield return new WaitForSeconds(closedDoorTime);
+        float timer = 0f;
 
-        // Change to open door
+        asyncLoad = SceneManager.LoadSceneAsync(nextSceneName);
+
+        if (asyncLoad == null)
+        {
+            Debug.LogError("Failed to load scene: " + nextSceneName);
+            yield break;
+        }
+
+        asyncLoad.allowSceneActivation = false;
+
+        while (asyncLoad.progress < 0.9f || timer < minimumLoadingTime)
+        {
+            timer += Time.deltaTime;
+
+            float sceneProgress = asyncLoad.progress / 0.9f;
+            float timeProgress = timer / minimumLoadingTime;
+            float progress = Mathf.Min(sceneProgress, timeProgress);
+            progress = Mathf.Clamp01(progress);
+
+            int percentage = Mathf.RoundToInt(progress * 100f);
+            loadingText.text = "Loading... " + percentage + "%";
+
+            yield return null;
+        }
+
+        loadingText.text = "Loading... 100%";
+
         doorImage.sprite = openDoorSprite;
 
-        // Wait a little so player sees the opening
-        yield return new WaitForSeconds(openDoorTime);
+        yield return new WaitForSeconds(openDoorDelay);
 
-        // Go to the next scene
-        SceneManager.LoadScene(nextSceneName);
+        asyncLoad.allowSceneActivation = true;
     }
 }
