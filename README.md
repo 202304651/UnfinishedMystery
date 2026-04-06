@@ -35,9 +35,9 @@ Unfinished Mystery is a narrative-driven puzzle game where players are trapped i
 | Level | Role | Description | Developer |
 |------|------|-------------|-----------|
 | Level 1 | Professor | Solve mathematical puzzles in a personal office to uncover hidden academic secrets. | Fatema Ebrahim |
-| Level 2 | Detective | Investigate an abandoned apartment and connect evidence to reveal a missing case. | Maram Shubbar |
-| Level 3 | Projectionist | Use film reels and projection equipment to reconstruct events in a cinema. | Kawther Abdulla |
-| Level 4 | Photographer | Analyze photos and documents in an archive room to uncover manipulated truth. | Fatema Maitham |
+| Level 2 | Detective | Investigate an abandoned apartment and connect evidence to reveal a missing case. | Fatema Maitham |
+| Level 3 | Projectionist | Use film reels and projection equipment to reconstruct events in a cinema. | Maram Shubbar |
+| Level 4 | Photographer | Analyze photos and documents in an archive room to uncover manipulated truth. | Kawther Abdulla |
 | Level 5 | Doctor | Explore a lab and solve complex puzzles to expose unethical experiments. | Mohamed Abdali |
 
 ---
