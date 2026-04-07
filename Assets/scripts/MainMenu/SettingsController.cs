@@ -58,17 +58,29 @@ public class SettingsController : MonoBehaviour
     }
 
     // Fullscreen toggle
-    void ToggleFullscreen()
+void ToggleFullscreen()
+{
+    bool newFullscreen = !Screen.fullScreen;
+
+    if (newFullscreen)
     {
-#if UNITY_EDITOR
-        fakeFullscreen = !fakeFullscreen;
-        fullscreenText.text = fakeFullscreen ? "ON" : "OFF";
-        if (fakeFullscreen != savedFullscreen) applyButton.interactable = true;
-#else
-        Screen.fullScreen = !Screen.fullScreen;
-        fullscreenText.text = Screen.fullScreen ? "ON" : "OFF";
-        if (Screen.fullScreen != savedFullscreen) applyButton.interactable = true;
-#endif
+        // Fullscreen use current monitor resolution
+        Resolution res = Screen.currentResolution;
+        Screen.SetResolution(res.width, res.height, true);
+    }
+    else
+    {
+        // Windowed use the resolution selected in the dropdown
+        Resolution res = Screen.resolutions[resolutionDropdown.value];
+        Screen.SetResolution(res.width, res.height, false);
+    }
+
+    Screen.fullScreen = newFullscreen;
+    fullscreenText.text = newFullscreen ? "ON" : "OFF";
+
+    // Enable Apply button
+    applyButton.interactable = true;
+
     }
 
     // Slider change handler
@@ -110,13 +122,17 @@ public class SettingsController : MonoBehaviour
         savedSFX = sfxSlider.value;
         savedResolution = resolutionDropdown.value;
 
-        // Apply resolution
+    // Apply resolution depending on fullscreen
+    if (Screen.fullScreen)
+    {
+        Resolution res = Screen.currentResolution;
+        Screen.SetResolution(res.width, res.height, true);
+    }
+    else
+    {
         Resolution res = Screen.resolutions[resolutionDropdown.value];
-        Screen.SetResolution(res.width, res.height, Screen.fullScreen);
-
-        // Disable Apply button again
-        applyButton.interactable = false;
-
+        Screen.SetResolution(res.width, res.height, false);
+    }
         Debug.Log("Settings applied!");
     }
 
