@@ -31,24 +31,27 @@ public class SettingsController : MonoBehaviour
         UpdateApplyButtonState();
     }
 
-    void LoadSavedSettings()
+    private void LoadSavedSettings()
     {
-        savedMusic = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        savedSFX = PlayerPrefs.GetFloat("SFXVolume", 1f);
-        savedResolution = PlayerPrefs.GetInt("ResolutionIndex", 0);
+        // Load saved values with defaults
+        savedMusic = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+        savedSFX = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        savedResolution = PlayerPrefs.GetInt("ResolutionIndex", Screen.currentResolution.width == 1920 ? 0 : 0);
         savedFullscreen = PlayerPrefs.GetInt("Fullscreen", Screen.fullScreen ? 1 : 0) == 1;
 
-        // Set UI
+        // Apply to UI
         musicSlider.value = savedMusic;
         sfxSlider.value = savedSFX;
         resolutionDropdown.value = savedResolution;
-        Screen.fullScreen = savedFullscreen;
         fullscreenText.text = savedFullscreen ? "ON" : "OFF";
 
-        UpdateAudioSources();
+        // Apply to system
+        ApplyAudio();
+        ApplyResolution();
+        Screen.fullScreen = savedFullscreen;
     }
 
-    void AddListeners()
+    private void AddListeners()
     {
         fullscreenButton.onClick.RemoveAllListeners();
         fullscreenButton.onClick.AddListener(ToggleFullscreen);
@@ -66,33 +69,36 @@ public class SettingsController : MonoBehaviour
         applyButton.onClick.AddListener(ApplySettings);
     }
 
-    void ToggleFullscreen()
+    private void ToggleFullscreen()
     {
         Screen.fullScreen = !Screen.fullScreen;
         fullscreenText.text = Screen.fullScreen ? "ON" : "OFF";
         OnSettingChanged();
     }
 
-    void OnSettingChanged()
+    private void OnSettingChanged()
     {
         settingsChanged = true;
         UpdateApplyButtonState();
-        UpdateAudioSources();
+        ApplyAudio(); // instant preview while sliding
     }
 
-    void UpdateAudioSources()
+    private void ApplyAudio()
     {
-        if (musicSource) musicSource.volume = Mathf.Pow(musicSlider.value, 2); // logarithmic feel
-        if (sfxSource) sfxSource.volume = Mathf.Pow(sfxSlider.value, 2);
+        if (musicSource != null)
+            musicSource.volume = Mathf.Clamp01(musicSlider.value); // 0 = mute, 1 = max
+        if (sfxSource != null)
+            sfxSource.volume = Mathf.Clamp01(sfxSlider.value);
     }
 
-    void UpdateApplyButtonState()
+    private void UpdateApplyButtonState()
     {
         applyButton.interactable = settingsChanged;
     }
 
     public void ApplySettings()
     {
+        // Save settings
         PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
         PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
         PlayerPrefs.SetInt("ResolutionIndex", resolutionDropdown.value);
@@ -105,20 +111,36 @@ public class SettingsController : MonoBehaviour
         savedResolution = resolutionDropdown.value;
         savedFullscreen = Screen.fullScreen;
 
-        // Disable apply
+        // Apply resolution
+        ApplyResolution();
+
+        // Disable apply button
         settingsChanged = false;
         UpdateApplyButtonState();
 
-        // Apply resolution
+        Debug.Log("Settings applied perfectly!");
+    }
+
+    private void ApplyResolution()
+    {
+        if (resolutionDropdown.options.Count == 0) return;
+
         Resolution res = Screen.resolutions[resolutionDropdown.value];
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
-
-        Debug.Log("Settings applied!");
     }
 
     public void ReturnToMenu()
     {
-        LoadSavedSettings();
+        // Reload saved settings
+        musicSlider.value = savedMusic;
+        sfxSlider.value = savedSFX;
+        resolutionDropdown.value = savedResolution;
+        Screen.fullScreen = savedFullscreen;
+        fullscreenText.text = savedFullscreen ? "ON" : "OFF";
+
+        ApplyAudio();
+        ApplyResolution();
+
         settingsChanged = false;
         UpdateApplyButtonState();
     }
