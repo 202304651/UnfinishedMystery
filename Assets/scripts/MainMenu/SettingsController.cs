@@ -57,9 +57,35 @@ public class SettingsController : MonoBehaviour
         resolutionDropdown.onValueChanged.AddListener(OnDropdownChanged);
     }
 
+    void OnEnable()
+    {
+        // Temporarily disable listener updates
+        musicSlider.onValueChanged.RemoveListener(OnSliderChanged);
+        sfxSlider.onValueChanged.RemoveListener(OnSliderChanged);
+        resolutionDropdown.onValueChanged.RemoveListener(OnDropdownChanged);
+
+        // Reset sliders, dropdown, fullscreen
+        musicSlider.value = savedMusic;
+        sfxSlider.value = savedSFX;
+        resolutionDropdown.value = savedResolution;
+        UpdateFullscreenText();
+        UpdateAudioSources();
+
+        // Force UI update before re-adding listeners
+        Canvas.ForceUpdateCanvases();
+
+        // Now disable Apply button safely
+        applyButton.interactable = false;
+
+        // Re-add the listeners
+        musicSlider.onValueChanged.AddListener(OnSliderChanged);
+        sfxSlider.onValueChanged.AddListener(OnSliderChanged);
+        resolutionDropdown.onValueChanged.AddListener(OnDropdownChanged);
+    }
+
     // Fullscreen toggle
-void ToggleFullscreen()
-{
+    void ToggleFullscreen()
+    {
     bool newFullscreen = !Screen.fullScreen;
 
     if (newFullscreen)
