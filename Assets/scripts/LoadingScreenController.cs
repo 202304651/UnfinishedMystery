@@ -6,45 +6,25 @@ using TMPro;
 
 public class LoadingScreenController : MonoBehaviour
 {
-    [Header("Door")]
     public Image doorImage;
     public Sprite closedDoorSprite;
     public Sprite openDoorSprite;
-
-    [Header("UI")]
     public TextMeshProUGUI loadingText;
-    public RectTransform barFill;
-    public RectTransform barOutline;
 
-    [Header("Scene")]
     public string nextSceneName = "Level1";
 
-    [Header("Timing")]
     public float minimumLoadingTime = 2f;
     public float openDoorDelay = 1f;
 
     private AsyncOperation asyncLoad;
-    private float barHeight;
-    private float maxBarWidth;
 
     void Start()
     {
-        if (doorImage == null || closedDoorSprite == null || openDoorSprite == null || loadingText == null || barFill == null || barOutline == null)
+        if (doorImage == null || closedDoorSprite == null || openDoorSprite == null || loadingText == null)
         {
             Debug.LogError("LoadingScreenController: Missing references!");
             return;
         }
-
-        // نخلي الشريط يتمدد من اليسار
-        barFill.anchorMin = new Vector2(0f, 0.5f);
-        barFill.anchorMax = new Vector2(0f, 0.5f);
-        barFill.pivot = new Vector2(0f, 0.5f);
-        barFill.anchoredPosition = new Vector2(0f, 0f);
-
-        barHeight = barFill.sizeDelta.y;
-        maxBarWidth = barOutline.rect.width;
-
-        SetBarProgress(0f);
 
         StartCoroutine(LoadSceneRoutine());
     }
@@ -54,6 +34,7 @@ public class LoadingScreenController : MonoBehaviour
         doorImage.sprite = closedDoorSprite;
 
         float timer = 0f;
+
         asyncLoad = SceneManager.LoadSceneAsync(nextSceneName);
 
         if (asyncLoad == null)
@@ -74,26 +55,17 @@ public class LoadingScreenController : MonoBehaviour
             progress = Mathf.Clamp01(progress);
 
             int percentage = Mathf.RoundToInt(progress * 100f);
-            loadingText.text = "LOADING... " + percentage + "%";
-
-            SetBarProgress(progress);
+            loadingText.text = "Loading... " + percentage + "%";
 
             yield return null;
         }
 
-        loadingText.text = "LOADING... 100%";
-        SetBarProgress(1f);
+        loadingText.text = "Loading... 100%";
 
         doorImage.sprite = openDoorSprite;
 
         yield return new WaitForSeconds(openDoorDelay);
 
         asyncLoad.allowSceneActivation = true;
-    }
-
-    void SetBarProgress(float progress)
-    {
-        float newWidth = maxBarWidth * progress;
-        barFill.sizeDelta = new Vector2(newWidth, barHeight);
     }
 }
