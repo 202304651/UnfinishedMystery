@@ -4,75 +4,87 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Handles all main menu functionality:
 /// - Scene navigation (Start Game)
-/// - UI panels (Settings, Credits)
+/// - UI panels (Settings, Credits, Instructions)
 /// - Application control (Quit)
 /// </summary>
 public class MainMenuManager : MonoBehaviour
 {
     [Header("UI Panels")]
+    [Tooltip("Panel for Main Menu")]
+    public GameObject mainMenuPanel;
+
     [Tooltip("Panel for Settings menu")]
     public GameObject settingsPanel;
 
     [Tooltip("Panel for Credits screen")]
     public GameObject creditsPanel;
 
-    // =========================
-    // GAME FLOW
-    // =========================
+    [Tooltip("Panel for Instructions screen")]
+    public GameObject instructionsPanel;
 
-    /// <summary>
-    /// Loads the first gameplay scene.
-    /// Make sure the scene is added in Build Settings.
-    /// </summary>
+    void Start()
+    {
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (creditsPanel != null) creditsPanel.SetActive(false);
+        if (instructionsPanel != null) instructionsPanel.SetActive(false);
+    }
+
     public void StartGame()
     {
         SceneManager.LoadScene("SampleScene");
     }
 
-    // =========================
-    // UI PANELS
-    // =========================
-
-    /// <summary>
-    /// Opens the Settings panel.
-    /// </summary>
     public void OpenSettings()
     {
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
+        if (creditsPanel != null) creditsPanel.SetActive(false);
+        if (instructionsPanel != null) instructionsPanel.SetActive(false);
+
         if (settingsPanel != null)
             settingsPanel.SetActive(true);
         else
             Debug.LogWarning("Settings Panel is not assigned.");
     }
 
-    /// <summary>
-    /// Opens the Credits panel.
-    /// </summary>
     public void OpenCredits()
     {
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (instructionsPanel != null) instructionsPanel.SetActive(false);
+
         if (creditsPanel != null)
             creditsPanel.SetActive(true);
         else
             Debug.LogWarning("Credits Panel is not assigned.");
     }
 
-    /// <summary>
-    /// Closes any given panel (used by Return button).
-    /// </summary>
-    /// <param name="panel">The panel to hide</param>
+    public void OpenInstructions()
+    {
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (creditsPanel != null) creditsPanel.SetActive(false);
+
+        if (instructionsPanel != null)
+            instructionsPanel.SetActive(true);
+        else
+            Debug.LogWarning("Instructions Panel is not assigned.");
+    }
+
+    public void ReturnToMenu()
+    {
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
+        if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (creditsPanel != null) creditsPanel.SetActive(false);
+        if (instructionsPanel != null) instructionsPanel.SetActive(false);
+    }
+
     public void ClosePanel(GameObject panel)
     {
         if (panel != null)
             panel.SetActive(false);
     }
 
-    // =========================
-    // APPLICATION CONTROL
-    // =========================
-
-    /// <summary>
-    /// Exits the game application.
-    /// Note: Will not work inside Unity Editor.
-    /// </summary>
     public void QuitGame()
     {
         Debug.Log("Quit button pressed.");
