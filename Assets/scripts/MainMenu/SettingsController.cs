@@ -5,18 +5,18 @@ using TMPro;
 public class SettingsController : MonoBehaviour
 {
     [Header("UI Elements")]
-    public Button fullscreenButton;          // Fullscreen toggle button
-    public TMP_Text fullscreenText;          // Text inside fullscreen button
-    public Slider musicSlider;               // Music slider
-    public Slider sfxSlider;                 // SFX slider
-    public TMP_Dropdown resolutionDropdown;  // Resolution dropdown
-    public Button applyButton;               // Apply button
+    public Button fullscreenButton;
+    public TMP_Text fullscreenText;
+    public Slider musicSlider;
+    public Slider sfxSlider;
+    public TMP_Dropdown resolutionDropdown;
+    public Button applyButton;
 
     [Header("Audio Sources")]
-    public AudioSource musicSource;          // Music audio source
-    public AudioSource sfxSource;            // SFX audio source
+    public AudioSource musicSource;
+    public AudioSource sfxSource;
 
-    private bool fakeFullscreen = false;     // For Editor testing
+    private bool settingsChanged = false;
 
     // Saved settings
     private float savedMusic;
@@ -24,166 +24,102 @@ public class SettingsController : MonoBehaviour
     private int savedResolution;
     private bool savedFullscreen;
 
-    void Start()
+    private void OnEnable()
     {
-        // Apply button disabled by default
-        applyButton.interactable = false;
+        LoadSavedSettings();
+        AddListeners();
+        UpdateApplyButtonState();
+    }
 
-        // Fullscreen button
-        fullscreenButton.onClick.RemoveAllListeners();
-        fullscreenButton.onClick.AddListener(ToggleFullscreen);
-
-        // Load saved settings
+    void LoadSavedSettings()
+    {
         savedMusic = PlayerPrefs.GetFloat("MusicVolume", 1f);
         savedSFX = PlayerPrefs.GetFloat("SFXVolume", 1f);
         savedResolution = PlayerPrefs.GetInt("ResolutionIndex", 0);
-#if UNITY_EDITOR
-        savedFullscreen = fakeFullscreen;
-#else
-        savedFullscreen = Screen.fullScreen;
-#endif
+        savedFullscreen = PlayerPrefs.GetInt("Fullscreen", Screen.fullScreen ? 1 : 0) == 1;
 
-        // Initialize sliders and dropdown
+        // Set UI
         musicSlider.value = savedMusic;
         sfxSlider.value = savedSFX;
         resolutionDropdown.value = savedResolution;
+        Screen.fullScreen = savedFullscreen;
+        fullscreenText.text = savedFullscreen ? "ON" : "OFF";
 
-        UpdateFullscreenText();
         UpdateAudioSources();
-
-        // Track changes in sliders and dropdown
-        musicSlider.onValueChanged.AddListener(OnSliderChanged);
-        sfxSlider.onValueChanged.AddListener(OnSliderChanged);
-        resolutionDropdown.onValueChanged.AddListener(OnDropdownChanged);
     }
 
-    void OnEnable()
+    void AddListeners()
     {
-        // Temporarily disable listener updates
-        musicSlider.onValueChanged.RemoveListener(OnSliderChanged);
-        sfxSlider.onValueChanged.RemoveListener(OnSliderChanged);
-        resolutionDropdown.onValueChanged.RemoveListener(OnDropdownChanged);
+        fullscreenButton.onClick.RemoveAllListeners();
+        fullscreenButton.onClick.AddListener(ToggleFullscreen);
 
-        // Reset sliders, dropdown, fullscreen
-        musicSlider.value = savedMusic;
-        sfxSlider.value = savedSFX;
-        resolutionDropdown.value = savedResolution;
-        UpdateFullscreenText();
-        UpdateAudioSources();
+        musicSlider.onValueChanged.RemoveAllListeners();
+        musicSlider.onValueChanged.AddListener((_) => OnSettingChanged());
 
-        // Force UI update before re-adding listeners
-        Canvas.ForceUpdateCanvases();
+        sfxSlider.onValueChanged.RemoveAllListeners();
+        sfxSlider.onValueChanged.AddListener((_) => OnSettingChanged());
 
-        // Now disable Apply button safely
-        applyButton.interactable = false;
+        resolutionDropdown.onValueChanged.RemoveAllListeners();
+        resolutionDropdown.onValueChanged.AddListener((_) => OnSettingChanged());
 
-        // Re-add the listeners
-        musicSlider.onValueChanged.AddListener(OnSliderChanged);
-        sfxSlider.onValueChanged.AddListener(OnSliderChanged);
-        resolutionDropdown.onValueChanged.AddListener(OnDropdownChanged);
+        applyButton.onClick.RemoveAllListeners();
+        applyButton.onClick.AddListener(ApplySettings);
     }
 
-    // Fullscreen toggle
     void ToggleFullscreen()
     {
-    bool newFullscreen = !Screen.fullScreen;
+        Screen.fullScreen = !Screen.fullScreen;
+        fullscreenText.text = Screen.fullScreen ? "ON" : "OFF";
+        OnSettingChanged();
+    }
 
-    if (newFullscreen)
+    void OnSettingChanged()
     {
-        // Fullscreen use current monitor resolution
-        Resolution res = Screen.currentResolution;
-        Screen.SetResolution(res.width, res.height, true);
-    }
-    else
-    {
-        // Windowed use the resolution selected in the dropdown
-        Resolution res = Screen.resolutions[resolutionDropdown.value];
-        Screen.SetResolution(res.width, res.height, false);
+        settingsChanged = true;
+        UpdateApplyButtonState();
+        UpdateAudioSources();
     }
 
-    Screen.fullScreen = newFullscreen;
-    fullscreenText.text = newFullscreen ? "ON" : "OFF";
-
-    // Enable Apply button
-    applyButton.interactable = true;
-
-    }
-
-    // Slider change handler
-    void OnSliderChanged(float _)
-    {
-        applyButton.interactable = true;  // Enable Apply button
-        UpdateAudioSources();              // Update audio in real-time
-    }
-
-    // Dropdown change handler
-    void OnDropdownChanged(int _)
-    {
-        applyButton.interactable = true;  // Enable Apply button
-    }
-
-    // Update audio sources
     void UpdateAudioSources()
     {
-        if (musicSource != null)
-            musicSource.volume = musicSlider.value;
-        if (sfxSource != null)
-            sfxSource.volume = sfxSlider.value;
+        if (musicSource) musicSource.volume = Mathf.Pow(musicSlider.value, 2); // logarithmic feel
+        if (sfxSource) sfxSource.volume = Mathf.Pow(sfxSlider.value, 2);
     }
 
-    // Apply button clicked
+    void UpdateApplyButtonState()
+    {
+        applyButton.interactable = settingsChanged;
+    }
+
     public void ApplySettings()
     {
-        // Save all settings
         PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
         PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
         PlayerPrefs.SetInt("ResolutionIndex", resolutionDropdown.value);
+        PlayerPrefs.SetInt("Fullscreen", Screen.fullScreen ? 1 : 0);
+        PlayerPrefs.Save();
 
-#if UNITY_EDITOR
-        savedFullscreen = fakeFullscreen;
-#else
-        savedFullscreen = Screen.fullScreen;
-#endif
+        // Update saved values
         savedMusic = musicSlider.value;
         savedSFX = sfxSlider.value;
         savedResolution = resolutionDropdown.value;
+        savedFullscreen = Screen.fullScreen;
 
-    // Apply resolution depending on fullscreen
-    if (Screen.fullScreen)
-    {
-        Resolution res = Screen.currentResolution;
-        Screen.SetResolution(res.width, res.height, true);
-    }
-    else
-    {
+        // Disable apply
+        settingsChanged = false;
+        UpdateApplyButtonState();
+
+        // Apply resolution
         Resolution res = Screen.resolutions[resolutionDropdown.value];
-        Screen.SetResolution(res.width, res.height, false);
-    }
+        Screen.SetResolution(res.width, res.height, Screen.fullScreen);
+
         Debug.Log("Settings applied!");
     }
 
-    // Return button clicked
     public void ReturnToMenu()
     {
-        // Reset sliders and dropdown to saved values
-        musicSlider.value = savedMusic;
-        sfxSlider.value = savedSFX;
-        resolutionDropdown.value = savedResolution;
-
-        UpdateFullscreenText();
-        UpdateAudioSources();
-
-        // Disable Apply button
-        applyButton.interactable = false;
-    }
-
-    // Update fullscreen text
-    void UpdateFullscreenText()
-    {
-#if UNITY_EDITOR
-        fullscreenText.text = fakeFullscreen ? "ON" : "OFF";
-#else
-        fullscreenText.text = Screen.fullScreen ? "ON" : "OFF";
-#endif
+        LoadSavedSettings();
+        settingsChanged = false;
+        UpdateApplyButtonState();
     }
 }
