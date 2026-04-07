@@ -1195,7 +1195,6 @@ GameObject:
   - component: {fileID: 220195832}
   - component: {fileID: 220195831}
   - component: {fileID: 220195830}
-  - component: {fileID: 220195829}
   m_Layer: 5
   m_Name: FullscreenButton
   m_TagString: Untagged
@@ -1223,20 +1222,6 @@ RectTransform:
   m_AnchoredPosition: {x: 289, y: -33.9}
   m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &220195829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 220195827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f1c451bec6f947408a751afcdcff1d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fullscreenButton: {fileID: 220195830}
-  buttonText: {fileID: 1466243157}
 --- !u!114 &220195830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1295,7 +1280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.3137255, g: 0.2901961, b: 0.2784314, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3077,13 +3062,14 @@ GameObject:
   - component: {fileID: 572886575}
   - component: {fileID: 572886577}
   - component: {fileID: 572886576}
+  - component: {fileID: 572886578}
   m_Layer: 5
   m_Name: SetPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &572886575
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3153,6 +3139,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 572886574}
   m_CullTransparentMesh: 1
+--- !u!114 &572886578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572886574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a082133dd377247cd825c5c2074734d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fullscreenButton: {fileID: 220195830}
+  fullscreenText: {fileID: 1466243157}
+  musicSlider: {fileID: 660340530}
+  sfxSlider: {fileID: 687772949}
+  resolutionDropdown: {fileID: 273353485}
+  applyButton: {fileID: 1210921086}
+  musicSource: {fileID: 637763287}
+  sfxSource: {fileID: 1508102498}
 --- !u!1 &587877902
 GameObject:
   m_ObjectHideFlags: 0
@@ -4708,7 +4714,7 @@ RectTransform:
   m_Father: {fileID: 477120890}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4941,7 +4947,7 @@ GameObject:
   - component: {fileID: 1210921087}
   - component: {fileID: 1210921086}
   m_Layer: 5
-  m_Name: BackButton (1)
+  m_Name: applyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6330,7 +6336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1484562873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7518,8 +7524,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 522539012}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7973,7 +7979,7 @@ RectTransform:
   m_Father: {fileID: 383612084}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8047,8 +8053,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 68921224}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

@@ -5,18 +5,18 @@ using TMPro;
 public class SettingsController : MonoBehaviour
 {
     [Header("UI Elements")]
-    public Button fullscreenButton;        // Fullscreen toggle button
-    public TMP_Text fullscreenText;        // Text inside fullscreen button
-    public Slider musicSlider;             // Music slider
-    public Slider sfxSlider;               // SFX slider
-    public TMP_Dropdown resolutionDropdown;// Resolution dropdown
-    public Button applyButton;             // Apply button
+    public Button fullscreenButton;          // Fullscreen toggle button
+    public TMP_Text fullscreenText;          // Text inside fullscreen button
+    public Slider musicSlider;               // Music slider
+    public Slider sfxSlider;                 // SFX slider
+    public TMP_Dropdown resolutionDropdown;  // Resolution dropdown
+    public Button applyButton;               // Apply button
 
     [Header("Audio Sources")]
-    public AudioSource musicSource;        // Music audio source
-    public AudioSource sfxSource;          // SFX audio source
+    public AudioSource musicSource;          // Music audio source
+    public AudioSource sfxSource;            // SFX audio source
 
-    private bool fakeFullscreen = false;   // For Editor testing
+    private bool fakeFullscreen = false;     // For Editor testing
 
     // Saved settings
     private float savedMusic;
@@ -26,14 +26,14 @@ public class SettingsController : MonoBehaviour
 
     void Start()
     {
-        // Apply button starts disabled
+        // Apply button disabled by default
         applyButton.interactable = false;
 
-        // Fullscreen button setup
+        // Fullscreen button
         fullscreenButton.onClick.RemoveAllListeners();
         fullscreenButton.onClick.AddListener(ToggleFullscreen);
 
-        // Load saved values
+        // Load saved settings
         savedMusic = PlayerPrefs.GetFloat("MusicVolume", 1f);
         savedSFX = PlayerPrefs.GetFloat("SFXVolume", 1f);
         savedResolution = PlayerPrefs.GetInt("ResolutionIndex", 0);
@@ -47,37 +47,44 @@ public class SettingsController : MonoBehaviour
         musicSlider.value = savedMusic;
         sfxSlider.value = savedSFX;
         resolutionDropdown.value = savedResolution;
-applyButton.interactable = true;  // when a setting changes
-applyButton.interactable = false;
+
         UpdateFullscreenText();
         UpdateAudioSources();
 
-        // Add listeners to track changes
-        musicSlider.onValueChanged.AddListener(OnSettingChanged);
-        sfxSlider.onValueChanged.AddListener(OnSettingChanged);
-        resolutionDropdown.onValueChanged.AddListener(OnSettingChanged);
+        // Track changes in sliders and dropdown
+        musicSlider.onValueChanged.AddListener(OnSliderChanged);
+        sfxSlider.onValueChanged.AddListener(OnSliderChanged);
+        resolutionDropdown.onValueChanged.AddListener(OnDropdownChanged);
     }
 
+    // Fullscreen toggle
     void ToggleFullscreen()
     {
 #if UNITY_EDITOR
         fakeFullscreen = !fakeFullscreen;
         fullscreenText.text = fakeFullscreen ? "ON" : "OFF";
-        if (fakeFullscreen != savedFullscreen) OnSettingChanged(0);
+        if (fakeFullscreen != savedFullscreen) applyButton.interactable = true;
 #else
         Screen.fullScreen = !Screen.fullScreen;
         fullscreenText.text = Screen.fullScreen ? "ON" : "OFF";
-        if (Screen.fullScreen != savedFullscreen) OnSettingChanged(0);
+        if (Screen.fullScreen != savedFullscreen) applyButton.interactable = true;
 #endif
     }
 
-    // Called whenever a setting changes
-    void OnSettingChanged(float _)
+    // Slider change handler
+    void OnSliderChanged(float _)
     {
         applyButton.interactable = true;  // Enable Apply button
-        UpdateAudioSources();
+        UpdateAudioSources();              // Update audio in real-time
     }
 
+    // Dropdown change handler
+    void OnDropdownChanged(int _)
+    {
+        applyButton.interactable = true;  // Enable Apply button
+    }
+
+    // Update audio sources
     void UpdateAudioSources()
     {
         if (musicSource != null)
@@ -89,6 +96,7 @@ applyButton.interactable = false;
     // Apply button clicked
     public void ApplySettings()
     {
+        // Save all settings
         PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
         PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
         PlayerPrefs.SetInt("ResolutionIndex", resolutionDropdown.value);
@@ -102,16 +110,17 @@ applyButton.interactable = false;
         savedSFX = sfxSlider.value;
         savedResolution = resolutionDropdown.value;
 
-        // Disable Apply button again
-        applyButton.interactable = false;
-
-        // Apply resolution change
+        // Apply resolution
         Resolution res = Screen.resolutions[resolutionDropdown.value];
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
+
+        // Disable Apply button again
+        applyButton.interactable = false;
 
         Debug.Log("Settings applied!");
     }
 
+    // Return button clicked
     public void ReturnToMenu()
     {
         // Reset sliders and dropdown to saved values
@@ -126,6 +135,7 @@ applyButton.interactable = false;
         applyButton.interactable = false;
     }
 
+    // Update fullscreen text
     void UpdateFullscreenText()
     {
 #if UNITY_EDITOR
